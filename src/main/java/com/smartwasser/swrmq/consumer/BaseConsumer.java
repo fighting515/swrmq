@@ -15,9 +15,10 @@ public abstract class BaseConsumer {
 	private String topicGroup;// 话题组
 	private String nameserverAddress;// rocket nameserver ip:port
 	private String instanceName;// 实例名,非必填
-	private MessageModel messageModel = MessageModel.BROADCASTING;// 消费模式：1 集群消费
-																	// 2 广播消费
+	private MessageModel messageModel = MessageModel.BROADCASTING;// 消费模式：0 集群消费
+																	// 1 广播消费
 																	// 默认广播消费
+	private int messageModelValue;
 
 	protected MessageHandler messageHandler;// 消息处理者
 
@@ -48,13 +49,31 @@ public abstract class BaseConsumer {
 	public MessageModel getMessageModel() {
 		return messageModel;
 	}
-
+	
 	public void setMessageModel(MessageModel messageModel) {
 		this.messageModel = messageModel;
 	}
 
 	public MessageHandler getMessageHandler() {
 		return messageHandler;
+	}
+
+	public void setMessageHandler(MessageHandler messageHandler) {
+		this.messageHandler = messageHandler;
+	}
+	
+	public int getMessageModelValue() {
+		return messageModelValue;
+	}
+
+	public void setMessageModelValue(int messageModelValue) {
+		if(messageModelValue == 0){
+			this.messageModel = MessageModel.CLUSTERING;
+		}
+		
+		if(messageModelValue == 1){
+			this.messageModel = MessageModel.BROADCASTING;
+		}
 	}
 
 }

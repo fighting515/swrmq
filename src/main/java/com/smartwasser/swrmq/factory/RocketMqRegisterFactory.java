@@ -1,13 +1,13 @@
 package com.smartwasser.swrmq.factory;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.alibaba.rocketmq.client.consumer.DefaultMQPullConsumer;
 import com.alibaba.rocketmq.client.consumer.DefaultMQPushConsumer;
@@ -32,24 +32,37 @@ import com.smartwasser.swrmq.consumer.BasePushConsumer;
  */
 public class RocketMqRegisterFactory {
 	
-	private static final Logger logger = Logger.getLogger(RocketMqRegisterFactory.class);
+	private static final Logger logger = LoggerFactory.getLogger(RocketMqRegisterFactory.class);
 	
-	private String localIp;//本机IP
-	private List<BasePullConsumer> pullConsumers = new ArrayList<BasePullConsumer>();//已注册的拉取型消费者集合
-	private List<BasePushConsumer> pushConsumers = new ArrayList<BasePushConsumer>();//已注册的推送型消费者集合
+	private RocketMqConfigFactory rocketMqConfigFactory;
+	
+	/**
+	 * 将所有消费注册到容器中
+	 */
+	public RocketMqRegisterFactory(RocketMqConfigFactory rocketMqConfigFactory){
+		this.rocketMqConfigFactory = rocketMqConfigFactory;
+		for (Iterator<BasePullConsumer> iterator = rocketMqConfigFactory.getPullConsumers().iterator(); iterator.hasNext();) {
+			BasePullConsumer basePullConsumer = (BasePullConsumer) iterator.next();
+			registPullConsumer(basePullConsumer);
+		}
+		for (Iterator<BasePushConsumer> iterator = rocketMqConfigFactory.getPushConsumers().iterator(); iterator.hasNext();) {
+			BasePushConsumer basePushConsumer = (BasePushConsumer) iterator.next();
+			registPushConsumer(basePushConsumer);
+		}
+	}
 	
 	/**
 	 * 注册pull型消费者
 	 * @param basePullConsumer
 	 * @return
 	 */
-	public boolean registPullConsumer(final BasePullConsumer basePullConsumer){
+	private boolean registPullConsumer(final BasePullConsumer basePullConsumer){
 		if(basePullConsumer != null){
 			final DefaultMQPullConsumer pullConsumer = new DefaultMQPullConsumer(basePullConsumer.getTopic());
 			pullConsumer.setConsumerGroup(basePullConsumer.getTopicGroup());
 			pullConsumer.setNamesrvAddr(basePullConsumer.getNameserverAddress());
 			pullConsumer.setInstanceName(basePullConsumer.getInstanceName());
-			pullConsumer.setClientIP(localIp);
+			pullConsumer.setClientIP(rocketMqConfigFactory.getLocalIp());
 			pullConsumer.setMessageModel(basePullConsumer.getMessageModel());
 			
 			//注册监听，拉取队列中的消息，该监听只会在初始化时执行一次
@@ -90,8 +103,6 @@ public class RocketMqRegisterFactory {
 								default:
 									break;
 								}
-								//更新当前队列的消费进度
-								pullConsumer.updateConsumeOffset(messageQueue, result.getNextBeginOffset());
 							}else{
 								logger.info("消息队列 "+messageQueue.getTopic()+" - "+messageQueue.getQueueId()+" 的消费进度为"+offset);
 							}
@@ -104,8 +115,6 @@ public class RocketMqRegisterFactory {
 			
 			try {
 				pullConsumer.start();
-				pullConsumers.add(basePullConsumer);
-				logger.info("已注册的拉取型消费者数量为："+pullConsumers.size());
 			} catch (MQClientException e) {
 				logger.error("启动pullConsumer失败",e);
 				return false;
@@ -122,19 +131,24 @@ public class RocketMqRegisterFactory {
 	 * @return
 	 * @throws MQClientException
 	 */
-	public boolean registPushConsumer(final BasePushConsumer basePushConsumer) throws MQClientException{
+	private boolean registPushConsumer(final BasePushConsumer basePushConsumer){
 		
 		DefaultMQPushConsumer pushConsumer = new DefaultMQPushConsumer();
 		pushConsumer.setNamesrvAddr(basePushConsumer.getNameserverAddress());
 		pushConsumer.setInstanceName(basePushConsumer.getInstanceName());
-		pushConsumer.setClientIP(localIp);
+		pushConsumer.setClientIP(rocketMqConfigFactory.getLocalIp());
 		pushConsumer.setConsumerGroup(basePushConsumer.getTopicGroup());
 		Map<String, String> topicMap = basePushConsumer.getTopicMap();
                  		if(topicMap.size() > 0){
 			Set<Entry<String, String>> set = topicMap.entrySet();
 			for (Iterator<Entry<String, String>> iterator = set.iterator(); iterator.hasNext();) {
 				Entry<String, String> entry = (Entry<String, String>) iterator.next();
-				pushConsumer.subscribe(entry.getKey(), entry.getValue());
+				try {
+					pushConsumer.subscribe(entry.getKey(), entry.getValue());
+				} catch (MQClientException e) {
+					logger.error("订阅异常",e);
+					return false;
+				}
 			}
 		}
 		pushConsumer.setMessageModel(basePushConsumer.getMessageModel());//消费模式
@@ -161,18 +175,13 @@ public class RocketMqRegisterFactory {
 				return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
 			}
 		});
-		pushConsumer.start();
-		pushConsumers.add(basePushConsumer);
-		logger.info("已注册推送型消费者数量为："+pushConsumers.size());
+		try {
+			pushConsumer.start();
+		} catch (MQClientException e) {
+			logger.error("启动push消费者失败！",e);
+			return false;
+		}
 		return true;
-	}
-
-	public String getLocalIp() {
-		return localIp;
-	}
-
-	public void setLocalIp(String localIp) {
-		this.localIp = localIp;
 	}
 
 }

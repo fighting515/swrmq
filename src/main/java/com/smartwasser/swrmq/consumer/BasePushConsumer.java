@@ -17,5 +17,9 @@ public abstract class BasePushConsumer extends BaseConsumer{
 	public Map<String, String> getTopicMap() {
 		return topicMap;
 	}
+
+	public void setTopicMap(Map<String, String> topicMap) {
+		this.topicMap = topicMap;
+	}
 	
 }
