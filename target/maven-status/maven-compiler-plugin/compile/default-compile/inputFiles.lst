@@ -42,6 +42,7 @@
 /Users/chenhao/Documents/workspace/swrmq/src/main/java/com/smartwasser/swrmq/model/BcSysRoleExample.java
 /Users/chenhao/Documents/workspace/swrmq/src/main/java/com/smartwasser/swrmq/model/ModelAccredit.java
 /Users/chenhao/Documents/workspace/swrmq/src/main/java/com/smartwasser/swrmq/dao/RmqClientUnitLinkmanMapper.java
+/Users/chenhao/Documents/workspace/swrmq/src/main/java/com/smartwasser/swrmq/handler/FuncMessageHandler.java
 /Users/chenhao/Documents/workspace/swrmq/src/main/java/com/smartwasser/swrmq/model/SubSysInfoExample.java
 /Users/chenhao/Documents/workspace/swrmq/src/main/java/com/smartwasser/swrmq/model/BcSysLogExample.java
 /Users/chenhao/Documents/workspace/swrmq/src/main/java/com/smartwasser/swrmq/dao/RmqBcSysOrgMapper.java
