@@ -10,10 +10,9 @@ import com.alibaba.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
 import com.alibaba.rocketmq.client.consumer.listener.MessageListenerConcurrently;
 import com.alibaba.rocketmq.client.exception.MQClientException;
 import com.alibaba.rocketmq.common.message.MessageExt;
-import com.alibaba.rocketmq.common.protocol.heartbeat.MessageModel;
 import com.smartwasser.swrmq.factory.RocketMqConfigFactory;
 import com.smartwasser.swrmq.factory.RocketMqRegisterFactory;
-import com.smartwasser.swrmq.handler.UserMessageHandler;
+import com.smartwasser.swrmq.handler.ClientSysUserMessageHandler;
 
 public class PushConsumerTest {
 	
@@ -48,7 +47,7 @@ public class PushConsumerTest {
 	
 	public void test2() throws MQClientException{
 		
-		UserPushConsumer consumer = new UserPushConsumer(new UserMessageHandler());
+		UserPushConsumer consumer = new UserPushConsumer(new ClientSysUserMessageHandler());
 		consumer.setInstanceName("scsj"+UUID.randomUUID());
 		consumer.setNameserverAddress("192.168.2.112:9876");
 		consumer.getTopicMap().put("topic-user-insert", "json");

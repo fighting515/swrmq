@@ -2,6 +2,7 @@ package com.smartwasser.swrmq.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Map;
 
 public class ClientSysUser extends ClientSysUserKey implements Serializable{
 
@@ -361,4 +362,15 @@ public class ClientSysUser extends ClientSysUserKey implements Serializable{
     public void setSuperAdminFlag(String superAdminFlag) {
         this.superAdminFlag = superAdminFlag == null ? null : superAdminFlag.trim();
     }
+    
+    public Map<String,String> schema;
+
+	public Map<String, String> getSchema() {
+		return schema;
+	}
+
+	public void setSchema(Map<String, String> schema) {
+		this.schema = schema;
+	}
+	
 }

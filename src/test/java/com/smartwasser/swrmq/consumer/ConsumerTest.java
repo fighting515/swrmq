@@ -4,16 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import com.alibaba.rocketmq.common.protocol.heartbeat.MessageModel;
 import com.smartwasser.swrmq.factory.RocketMqConfigFactory;
 import com.smartwasser.swrmq.factory.RocketMqRegisterFactory;
-import com.smartwasser.swrmq.handler.UserMessageHandler;
+import com.smartwasser.swrmq.handler.ClientSysUserMessageHandler;
 
 public class ConsumerTest {
 	
 	public static void main(String[] args) {
 		
-		UserPullConsumer consumer = new UserPullConsumer(new UserMessageHandler());
+		UserPullConsumer consumer = new UserPullConsumer(new ClientSysUserMessageHandler());
 		consumer.setInstanceName("scsj"+UUID.randomUUID());
 		consumer.setNameserverAddress("192.168.2.112:9876");
 		consumer.setSubExpression("json");

@@ -8,7 +8,7 @@ import com.smartwasser.swrmq.model.BcSysUserExample;
 /**
  * 
  * <p>RmqBcSysUserService</p>
- * <p>@description: </p>
+ * <p>@description: 用户信息表操作</p>
  * <p>@author: chenhao</p>
  * <p>@date: 2016年7月21日 下午1:43:29</p>
  */
@@ -28,7 +28,11 @@ public class RmqBcSysUserService extends BaseService{
 		BcSysUserExample example = new BcSysUserExample();
 		example.createCriteria().andIdEqualTo(id);
 		List<BcSysUser> list = this.mapper.selectByExample(example);
-		return list == null ? null : list.get(0);
+		if(list != null && list.size() > 0){
+			return list.get(0);
+		}else{
+			return null;
+		}
 	}
 
 	public void update(BcSysUser record, BcSysUserExample example) {

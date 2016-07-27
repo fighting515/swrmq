@@ -4,7 +4,7 @@
 
   <groupId>com.smartwasser</groupId>
   <artifactId>swrmq</artifactId>
-  <version>0.0.19-SNAPSHOT</version>
+  <version>0.0.33-SNAPSHOT</version>
   <packaging>jar</packaging>
   <description>rocketMq的基础封装</description>
 
@@ -169,6 +169,13 @@
 		<version>1.7.7</version>
 	</dependency>
 	<!-- 日志相关 -->
+	<!-- quartz定时任务相关 -->
+	<dependency>
+		<groupId>org.quartz-scheduler</groupId>
+		<artifactId>quartz</artifactId>
+		<version>2.1.6</version>
+	</dependency>
+	<!-- quartz定时任务相关 -->
   </dependencies>
   
   <distributionManagement>  

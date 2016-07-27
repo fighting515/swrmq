@@ -13,5 +13,8 @@ public class Constant {
 	public static final String UPDATE = "UPDATE";
 	public static final String DELETE = "DELETE";
 
-	
+	public static final String CLIENT_SYS_USER = "client_sys_user";
+	public static final String SUB_SYS_FUNC = "sub_sys_func";
+	public static final String BC_SYS_USER = "bc_sys_user";
+	public static final String BC_SYS_FUNC = "bc_sys_func";
 }

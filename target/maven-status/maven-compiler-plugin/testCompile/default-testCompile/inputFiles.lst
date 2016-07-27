@@ -1,6 +1,7 @@
 /Users/chenhao/Documents/workspace/swrmq/src/test/java/com/smartwasser/swrmq/consumer/PushConsumerTest.java
+/Users/chenhao/Documents/workspace/swrmq/src/test/java/com/smartwasser/swrmq/producer/UserProducerTest.java
 /Users/chenhao/Documents/workspace/swrmq/src/test/java/com/smartwasser/swrmq/consumer/Consumer2Test.java
 /Users/chenhao/Documents/workspace/swrmq/src/test/java/com/smartwasser/swrmq/consumer/ConsumerMultiTopicTest.java
+/Users/chenhao/Documents/workspace/swrmq/src/test/java/com/smartwasser/swrmq/producer/FuncProducerTest.java
 /Users/chenhao/Documents/workspace/swrmq/src/test/java/com/smartwasser/swrmq/consumer/ConsumerTest.java
 /Users/chenhao/Documents/workspace/swrmq/src/test/java/com/smartwasser/swrmq/consumer/PullConsumerTest.java
-/Users/chenhao/Documents/workspace/swrmq/src/test/java/com/smartwasser/swrmq/producer/ProducerTest.java

@@ -24,7 +24,6 @@ com/smartwasser/swrmq/model/ClientUnitInfoExample$Criteria.class
 com/smartwasser/swrmq/model/SubSysInfoKey.class
 com/smartwasser/swrmq/model/BcSysRoleExample$Criteria.class
 com/smartwasser/swrmq/model/SystemAccredit.class
-com/smartwasser/swrmq/producer/UserProducer.class
 com/smartwasser/swrmq/dao/RmqBcSysResourceRightMapper.class
 com/smartwasser/swrmq/dao/RmqClientUnitInfoMapper.class
 com/smartwasser/swrmq/model/BcSysRoleExample$GeneratedCriteria.class
@@ -105,7 +104,6 @@ com/smartwasser/swrmq/service/BaseService.class
 com/smartwasser/swrmq/model/DataSourceExample$Criteria.class
 com/smartwasser/swrmq/model/BcSysOrguser.class
 com/smartwasser/swrmq/dao/RmqBcSysFuncMapper.class
-com/smartwasser/swrmq/handler/UserMessageHandler.class
 com/smartwasser/swrmq/model/BcSysRole.class
 com/smartwasser/swrmq/dao/RmqBcSysLogMapper.class
 com/smartwasser/swrmq/model/ModelAccredit.class

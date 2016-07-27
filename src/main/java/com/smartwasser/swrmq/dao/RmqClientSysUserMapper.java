@@ -1,6 +1,7 @@
 package com.smartwasser.swrmq.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
@@ -147,4 +148,6 @@ public interface RmqClientSysUserMapper {
           "and username = #{username,jdbcType=VARCHAR}"
     })
     int updateByPrimaryKey(ClientSysUser record);
+
+	List<Map<String, String>> selectUserSchema(String username);
 }

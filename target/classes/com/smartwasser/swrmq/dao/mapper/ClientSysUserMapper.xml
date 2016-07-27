@@ -349,4 +349,8 @@
     where id = #{id,jdbcType=VARCHAR}
       and username = #{username,jdbcType=VARCHAR}
   </update>
+   <select id="selectUserSchema" parameterType="java.lang.String" resultType="java.util.Map">
+  	select DISTINCT tmp3.schema_name,tmp4.system_name_en from client_sys_user tmp1,system_accredit tmp2,data_source tmp3,sub_sys_info tmp4
+	where tmp1.username = #{username} and tmp1.fk_client_unti_id = tmp2.fk_business_unit_code and tmp2.fk_schema_id = tmp3.id and tmp3.fk_system_id = tmp4.id;
+  </select>
 </mapper>

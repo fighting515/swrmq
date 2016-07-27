@@ -6,9 +6,9 @@ import org.slf4j.LoggerFactory;
 
 import com.alibaba.rocketmq.common.message.MessageExt;
 import com.smartwasser.swrmq.model.BcSysUser;
-import com.smartwasser.swrmq.model.BcSysUserExample;
 import com.smartwasser.swrmq.model.ClientSysUser;
-import com.smartwasser.swrmq.service.RmqBcSysUserService;
+import com.smartwasser.swrmq.model.ClientSysUserExample;
+import com.smartwasser.swrmq.service.RmqClientSysUserService;
 import com.smartwasser.swrmq.util.Constant;
 import com.smartwasser.swrmq.util.SerializeUtils;
 
@@ -19,13 +19,13 @@ import com.smartwasser.swrmq.util.SerializeUtils;
  * <p>@author: chenhao</p>
  * <p>@date: 2016年7月18日 下午2:07:01</p>
  */
-public class UserMessageHandler implements MessageHandler {
+public class BcSysUserMessageHandler implements MessageHandler {
 	
-	private Logger logger = LoggerFactory.getLogger(UserMessageHandler.class);
+	private Logger logger = LoggerFactory.getLogger(BcSysUserMessageHandler.class);
 	
-	private RmqBcSysUserService rmqBcSysUserService;
+	private RmqClientSysUserService rmqClientSysUserService;
 
-	public boolean handler(MessageExt messageExt) {
+	public synchronized boolean handler(MessageExt messageExt) {
 		
 		if(messageExt != null){
 			String tag = messageExt.getTags();
@@ -55,17 +55,24 @@ public class UserMessageHandler implements MessageHandler {
 	private boolean insert(MessageExt messageExt){
 		if(messageExt != null){
 			try {
-				ClientSysUser csu = (ClientSysUser)SerializeUtils.deserialize(messageExt.getBody());
-				BcSysUser bsu = new BcSysUser();
+				BcSysUser csu = (BcSysUser)SerializeUtils.deserialize(messageExt.getBody());
+				
+				if(this.rmqClientSysUserService.getById(csu.getId()) != null){
+					return this.update(messageExt);
+				}
+				
+				ClientSysUser bsu = new ClientSysUser();
 				bsu.setEmail(csu.getEmail());
 				bsu.setId(csu.getId());
 				bsu.setPassword(csu.getPassword());
 				bsu.setUsername(csu.getUsername());
 				bsu.setUsernamecn(csu.getUsernamecn());
-				bsu.setState(Long.valueOf(csu.getState()));
-				rmqBcSysUserService.save(bsu);
+				bsu.setState(csu.getState()+"");
+				bsu.setSuperAdminFlag(csu.getSuperAdminFlag());
+				rmqClientSysUserService.save(bsu);
 			} catch (Exception e) {
 				logger.error("用户信息添加处理失败！",e);
+				return false;
 			}
 		}
 		return true;
@@ -78,18 +85,23 @@ public class UserMessageHandler implements MessageHandler {
 	 */
 	private boolean update(MessageExt messageExt){
 		if(messageExt != null){
-			ClientSysUser csu = (ClientSysUser)SerializeUtils.deserialize(messageExt.getBody());
-			BcSysUser bsu = new BcSysUser();
+			BcSysUser csu = (BcSysUser)SerializeUtils.deserialize(messageExt.getBody());
+			
+			if(this.rmqClientSysUserService.getById(csu.getId()) == null){
+				return this.insert(messageExt);
+			}
+			
+			ClientSysUser bsu = new ClientSysUser();
 			bsu.setEmail(csu.getEmail());
 			bsu.setId(csu.getId());
 			bsu.setPassword(csu.getPassword());
 			bsu.setUsername(csu.getUsername());
 			bsu.setUsernamecn(csu.getUsernamecn());
-			
-			BcSysUserExample example = new BcSysUserExample();
+			bsu.setSuperAdminFlag(csu.getSuperAdminFlag());
+			ClientSysUserExample example = new ClientSysUserExample();
 			example.createCriteria().andIdEqualTo(csu.getId());
 			
-			rmqBcSysUserService.update(bsu, example);
+			rmqClientSysUserService.update(bsu, example);
 		}
 		return true;
 	}
@@ -101,17 +113,14 @@ public class UserMessageHandler implements MessageHandler {
 	 */
 	private boolean delete(MessageExt messageExt){
 		if(messageExt != null){
-			ClientSysUser csu = (ClientSysUser)SerializeUtils.deserialize(messageExt.getBody());
-			rmqBcSysUserService.delete(csu.getId());
+			BcSysUser csu = (BcSysUser)SerializeUtils.deserialize(messageExt.getBody());
+			rmqClientSysUserService.delete(csu.getId());
 		}
 		return true;
 	}
 
-	public RmqBcSysUserService getRmqBcSysUserService() {
-		return rmqBcSysUserService;
+	public void setRmqClientSysUserService(RmqClientSysUserService rmqClientSysUserService) {
+		this.rmqClientSysUserService = rmqClientSysUserService;
 	}
 
-	public void setRmqBcSysUserService(RmqBcSysUserService rmqBcSysUserService) {
-		this.rmqBcSysUserService = rmqBcSysUserService;
-	}
 }
